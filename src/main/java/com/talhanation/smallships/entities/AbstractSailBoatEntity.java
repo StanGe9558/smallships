@@ -4,6 +4,8 @@ import com.talhanation.smallships.Main;
 import com.talhanation.smallships.config.SmallShipsConfig;
 import com.talhanation.smallships.init.SoundInit;
 import com.talhanation.smallships.network.MessageSailState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.*;
 import net.minecraft.entity.passive.WaterMobEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -95,7 +97,10 @@ public abstract class AbstractSailBoatEntity extends TNBoatEntity {
 
     public void tick() {
         passengerwaittime--;
+        if(this.world.isRemote){
+            updateClientControls();
 
+        }
         if ((this.getControllingPassenger() == null ||!(this.getControllingPassenger() instanceof PlayerEntity) )&& getSailState()) {
             setSailState(false);
         }
@@ -151,6 +156,7 @@ public abstract class AbstractSailBoatEntity extends TNBoatEntity {
                 }
             }
         }
+
     }
 
     @Override
@@ -322,9 +328,6 @@ public abstract class AbstractSailBoatEntity extends TNBoatEntity {
         return false;
     }
 
-    /**
-     * Applies a velocity to the entities, to push them away from eachother.
-     */
     @Override
     public void applyEntityCollision(Entity entityIn) {
         super.applyEntityCollision(entityIn);
@@ -421,5 +424,11 @@ public abstract class AbstractSailBoatEntity extends TNBoatEntity {
         this.rightInputDown = rightInputDown;
         this.forwardInputDown = forwardInputDown;
         this.backInputDown = backInputDown;
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public void updateClientControls() {
+        ClientPlayerEntity player = Minecraft.getInstance().player;
+        this.updateInputs(player.movementInput.leftKeyDown, player.movementInput.rightKeyDown, player.movementInput.forwardKeyDown, player.movementInput.backKeyDown);
     }
 }

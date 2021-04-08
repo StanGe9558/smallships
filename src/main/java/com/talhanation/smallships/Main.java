@@ -66,6 +66,10 @@ public class Main {
         SIMPLE_CHANNEL.registerMessage(4, MessageSailStateDrakkar.class, (msg, buf) -> msg.toBytes(buf),
                 buf -> (new MessageSailStateDrakkar()).fromBytes(buf),
                 (msg, fun) -> msg.executeServerSide(fun.get()));
+
+        SIMPLE_CHANNEL.registerMessage(5, MessageControlShip.class, (msg, buf) -> msg.toBytes(buf),
+                buf -> (new MessageControlShip()).fromBytes(buf),
+                (msg, fun) -> msg.executeServerSide(fun.get()));
     }
 
     @SubscribeEvent

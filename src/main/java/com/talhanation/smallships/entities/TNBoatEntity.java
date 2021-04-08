@@ -342,6 +342,7 @@ public class TNBoatEntity extends Entity {
             world.playSound(null, getPosX(), getPosY(), getPosZ(), SoundEvents.BLOCK_CROP_BREAK, SoundCategory.BLOCKS, 1F, 0.9F + 0.2F * rand.nextFloat());
         }
     }
+
     private void updateRocking() {
         if (this.world.isRemote) {
             int i = this.getRockingTicks();
