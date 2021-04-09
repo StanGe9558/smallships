@@ -68,6 +68,9 @@ public abstract class EntityShipBase extends EntityVehicleBase {
     public abstract float getRotationModifier();
     public abstract float getPassengerFactor();
     public abstract double getPlayerYOffset();
+    public abstract boolean hasSail();
+    public abstract boolean hasPaddle();
+
 
     public EntityShipBase(EntityType type, World worldIn) {
         super(type, worldIn);
@@ -79,6 +82,8 @@ public abstract class EntityShipBase extends EntityVehicleBase {
         this.dataManager.register(BACKWARD, Boolean.valueOf(false));
         this.dataManager.register(LEFT, Boolean.valueOf(false));
         this.dataManager.register(RIGHT, Boolean.valueOf(false));
+        this.dataManager.register(LEFT_PADDLE, false);
+        this.dataManager.register(RIGHT_PADDLE, false);
     }
 
     public void readAdditional(CompoundNBT compound) {
@@ -156,6 +161,14 @@ public abstract class EntityShipBase extends EntityVehicleBase {
         }
         if (this.world.isRemote && needsUpdate)
             Main.SIMPLE_CHANNEL.sendToServer(new MessageControlShip(forward, backward, left, right, player));
+    }
+    public void setPaddleState(boolean left, boolean right) {
+        this.dataManager.set(LEFT_PADDLE, left);
+        this.dataManager.set(RIGHT_PADDLE, right);
+    }
+
+    public boolean getPaddleState(int side) {
+        return this.dataManager.<Boolean>get(side == 0 ? LEFT_PADDLE : RIGHT_PADDLE) && this.getControllingPassenger() != null;
     }
 
     public void setForward(boolean forward) {
@@ -241,7 +254,9 @@ public abstract class EntityShipBase extends EntityVehicleBase {
             setBackward(false);
             setLeft(false);
             setRight(false);
+            setSailState(false);
         }
+
         float speed = 0.0F;
         if (this.isLeft()) {
             --this.deltaRotation;
@@ -254,15 +269,39 @@ public abstract class EntityShipBase extends EntityVehicleBase {
         }
         this.rotationYaw += this.deltaRotation;
 
-        if (getSailState()) {
-            speed += (0.04 * modifier);
+        if (!hasPaddle() && hasSail()){
+            if (getSailState()) {
+                speed += (0.04 * modifier);
+            }
+            if (this.isBackward()) {
+                speed -= (0.005F * modifier);
+            }
+            if (this.isForward()) {
+                speed += (0.005F * modifier);
+            }
         }
-        if (this.isBackward()) {
-            speed -= (0.005F * modifier);
+
+        if (hasPaddle() && hasSail()){
+            if (getSailState()) {
+                speed += (0.04F * modifier);
+                if (isForward()) {
+                    speed += (0.02F * modifier);
+                }
+                if (this.isBackward()) {
+                    speed -= (0.005F * modifier);
+                }
+            }
         }
-        if (this.isForward()) {
-            speed += (0.005F * modifier);
+
+        if (hasPaddle() && !hasSail()){
+            if (this.isBackward()) {
+                speed -= (0.005F * modifier);
+            }
+            if (this.isForward()) {
+                speed += (0.04F * modifier);
+            }
         }
+
         this.setMotion(this.getMotion().add((double) (MathHelper.sin(-this.rotationYaw * ((float) Math.PI / 180F)) * speed), 0.0D, (double) (MathHelper.cos(this.rotationYaw * ((float) Math.PI / 180F)) * speed)));
     }
 
