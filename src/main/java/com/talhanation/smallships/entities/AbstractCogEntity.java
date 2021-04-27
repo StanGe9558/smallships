@@ -36,7 +36,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public abstract class AbstractCogEntity extends TNBoatEntity {
+public abstract class AbstractCogEntity extends UpgradeAbleEntity {
     private static final DataParameter<Boolean> SAIL_STATE = EntityDataManager.createKey(AbstractCogEntity.class, DataSerializers.BOOLEAN);
     public float momentum;
     public float outOfControlTicks;
@@ -368,12 +368,12 @@ public abstract class AbstractCogEntity extends TNBoatEntity {
             InventoryHelper.spawnItemStack(this.world, getPosX(), getPosY(), getPosZ(), this.inventory.getStackInSlot(i));
     }
 
-    protected void readAdditional(CompoundNBT compound) {
+    public void readAdditional(CompoundNBT compound) {
         super.readAdditional(compound);
         this.inventory.deserializeNBT(compound.getCompound("Items"));
     }
 
-    protected void writeAdditional(CompoundNBT compound) {
+    public void writeAdditional(CompoundNBT compound) {
         super.writeAdditional(compound);
         compound.put("Items", (INBT) this.inventory.serializeNBT());
 

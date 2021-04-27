@@ -7,7 +7,12 @@ import com.talhanation.smallships.init.ModEntityTypes;
 import com.talhanation.smallships.init.SoundInit;
 import com.talhanation.smallships.items.ModItems;
 import com.talhanation.smallships.network.*;
+import com.talhanation.smallships.upgrades.SimplePlanesDataSerializers;
+import com.talhanation.smallships.upgrades.UpgradeNetworking;
+import com.talhanation.smallships.upgrades.UpgradeType;
+import com.talhanation.smallships.upgrades.Upgrades;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -39,6 +44,9 @@ public class Main {
         final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         modEventBus.addListener(this::setup);
 
+        Upgrades.init();
+        SimplePlanesDataSerializers.init();
+        UpgradeNetworking.init();
         SoundInit.SOUNDS.register(modEventBus);
         ModItems.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ModEntityTypes.ENTITY_TYPES.register(modEventBus);
@@ -47,7 +55,7 @@ public class Main {
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> FMLJavaModLoadingContext.get().getModEventBus().addListener(Main.this::clientSetup));
     }
 
-    private void setup(final FMLCommonSetupEvent event) {
+    private void setup(FMLCommonSetupEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
         SIMPLE_CHANNEL = NetworkRegistry.newSimpleChannel(new ResourceLocation("smallships", "default"), () -> "1.0.0", s -> true, s -> true);
 
@@ -82,6 +90,23 @@ public class Main {
         SIMPLE_CHANNEL.registerMessage(7, MessageOpenInv.class, (msg, buf) -> msg.toBytes(buf),
                 buf -> (new MessageOpenInv()).fromBytes(buf),
                 (msg, fun) -> msg.executeServerSide(fun.get()));
+
+        Upgrades.registerUpgradeItem(Items.WHITE_BANNER, (UpgradeType)Upgrades.BANNER.get());
+        Upgrades.registerUpgradeItem(Items.ORANGE_BANNER, (UpgradeType)Upgrades.BANNER.get());
+        Upgrades.registerUpgradeItem(Items.MAGENTA_BANNER, (UpgradeType)Upgrades.BANNER.get());
+        Upgrades.registerUpgradeItem(Items.LIGHT_BLUE_BANNER, (UpgradeType)Upgrades.BANNER.get());
+        Upgrades.registerUpgradeItem(Items.YELLOW_BANNER, (UpgradeType)Upgrades.BANNER.get());
+        Upgrades.registerUpgradeItem(Items.LIME_BANNER, (UpgradeType)Upgrades.BANNER.get());
+        Upgrades.registerUpgradeItem(Items.PINK_BANNER, (UpgradeType)Upgrades.BANNER.get());
+        Upgrades.registerUpgradeItem(Items.GRAY_BANNER, (UpgradeType)Upgrades.BANNER.get());
+        Upgrades.registerUpgradeItem(Items.LIGHT_GRAY_BANNER, (UpgradeType)Upgrades.BANNER.get());
+        Upgrades.registerUpgradeItem(Items.CYAN_BANNER, (UpgradeType)Upgrades.BANNER.get());
+        Upgrades.registerUpgradeItem(Items.PURPLE_BANNER, (UpgradeType)Upgrades.BANNER.get());
+        Upgrades.registerUpgradeItem(Items.BLUE_BANNER, (UpgradeType)Upgrades.BANNER.get());
+        Upgrades.registerUpgradeItem(Items.BROWN_BANNER, (UpgradeType)Upgrades.BANNER.get());
+        Upgrades.registerUpgradeItem(Items.GREEN_BANNER, (UpgradeType)Upgrades.BANNER.get());
+        Upgrades.registerUpgradeItem(Items.RED_BANNER, (UpgradeType)Upgrades.BANNER.get());
+        Upgrades.registerUpgradeItem(Items.BLACK_BANNER, (UpgradeType)Upgrades.BANNER.get());
     }
 
 

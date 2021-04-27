@@ -11,6 +11,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.inventory.container.SimpleNamedContainerProvider;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -87,6 +88,10 @@ public class CogEntity extends AbstractCogEntity {
     }
 
     public ActionResultType processInitialInteract(PlayerEntity player, Hand hand) {
+        ItemStack itemStack = player.getHeldItem(hand);
+        if (tryToAddUpgrade(player, itemStack))
+            return ActionResultType.SUCCESS;
+        /*
         if (player.isSecondaryUseActive()) {
             if (this.isBeingRidden() && !(getControllingPassenger() instanceof net.minecraft.entity.player.PlayerEntity)){
                     this.removePassengers();
@@ -105,6 +110,10 @@ public class CogEntity extends AbstractCogEntity {
                 return ActionResultType.SUCCESS;
             }
         } else {
+            return ActionResultType.PASS;
+        }
+        */
+        else {
             return ActionResultType.PASS;
         }
     }
@@ -207,12 +216,12 @@ public class CogEntity extends AbstractCogEntity {
         this.dataManager.register(CARGO, Integer.valueOf(0));
     }
 
-    protected void readAdditional(CompoundNBT compound) {
+    public void readAdditional(CompoundNBT compound) {
         super.readAdditional(compound);
         this.dataManager.set(CARGO, Integer.valueOf(compound.getInt("Cargo")));
     }
 
-    protected void writeAdditional(CompoundNBT compound) {
+    public void writeAdditional(CompoundNBT compound) {
         super.writeAdditional(compound);
         compound.putInt("Cargo", ((Integer)this.dataManager.get(CARGO)).intValue());
     }

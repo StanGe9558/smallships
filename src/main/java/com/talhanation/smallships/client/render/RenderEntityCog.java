@@ -5,6 +5,8 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.talhanation.smallships.Main;
 import com.talhanation.smallships.client.model.ModelSailBoat;
 import com.talhanation.smallships.entities.CogEntity;
+import com.talhanation.smallships.entities.UpgradeAbleEntity;
+import com.talhanation.smallships.upgrades.Upgrade;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -84,6 +86,8 @@ public class RenderEntityCog extends EntityRenderer<CogEntity>{
         this.model.setRotationAngles(entityIn, partialTicks, 0.0F, -0.1F, 0.0F, 0.0F);
         IVertexBuilder ivertexbuilder = bufferIn.getBuffer(this.model.getRenderType(getEntityTexture(entityIn)));
         this.model.render(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+        for (Upgrade upgrade : (entityIn).upgrades.values())
+            upgrade.render(matrixStackIn, bufferIn, packedLightIn, partialTicks);
         matrixStackIn.pop();
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }
