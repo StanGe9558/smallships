@@ -17,7 +17,7 @@ public class ModEntityTypes {
 
     public static final RegistryObject<EntityType<CogEntity>> COG_ENTITY = ENTITY_TYPES.register("cog",
             () -> EntityType.Builder.<CogEntity>of(CogEntity::new, EntityClassification.MISC)
-                    .sized(3.5F, 1.25F)
+                    .sized(3.0F, 6.0F)
                     .clientTrackingRange(20)
                     .setUpdateInterval(10)
                     .setShouldReceiveVelocityUpdates(true)

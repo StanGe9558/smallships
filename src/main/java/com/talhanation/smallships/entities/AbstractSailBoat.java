@@ -80,8 +80,6 @@ public abstract class AbstractSailBoat extends AbstractInventoryBoat {
 
         if (!level.isClientSide && this.getSailState() || this.getIsForward()) {
             this.knockBack(this.level.getEntities(this, this.getBoundingBox().inflate(4.0D, 2.0D, 4.0D).move(0.0D, -2.0D, 0.0D), EntityPredicates.NO_CREATIVE_OR_SPECTATOR));
-            this.knockBack(this.level.getEntities(this, this.getBoundingBox().inflate(4.0D, 2.0D, 4.0D).move(0.0D, -2.0D, 0.0D), EntityPredicates.NO_CREATIVE_OR_SPECTATOR));
-
         }
 
 
@@ -183,7 +181,7 @@ public abstract class AbstractSailBoat extends AbstractInventoryBoat {
         entity.getNavigation().moveTo(fleePos.x, fleePos.y, fleePos.z, 10.0D);
     }
 
-    private void knockBack(List<Entity> entities) {
+    public void knockBack(List<Entity> entities) {
         double d0 = (this.getBoundingBox().minX + this.getBoundingBox().maxX) / 2.0D;
         double d1 = (this.getBoundingBox().minZ + this.getBoundingBox().maxZ) / 2.0D;
 
